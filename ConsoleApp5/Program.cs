@@ -4,83 +4,66 @@ namespace ConsoleApp5
 {
     class Program
     {
-        static void FromTopToBottom(int[] array, int volume)
-        {
-            int[] array1 = new int[volume];
-            array1 = array;
-            int temp;
-            Console.WriteLine("Result:");
-            for (int i = 0; i < volume; i++)
-            {
-                for (int j = i + 1; j < volume; j++)
-                if (array1[i] < array1[j])
-                {
-                    temp = array1[i];
-                    array1[i] = array1[j];
-                    array1[j] = temp;
-                }
-            Console.WriteLine(array1[i]);
-            }
-        }
-
-        static void FromBottomToTop(int[] array, int volume)
-        {
-            int[] array1 = new int[volume];
-            array1 = array;
-            int temp;
-            Console.WriteLine("Result:");
-            for (int i = 0; i < volume; i++)
-            {
-                for (int j = i + 1; j < volume; j++)
-                    if (array1[i] > array1[j])
-                    {
-                        temp = array1[j];
-                        array1[j] = array1[i];
-                        array1[i] = temp;
-                    }
-                Console.WriteLine(array1[i]);
-            }
-        }
-
-       /* static void FromBottomToTop(int[,] array_2D, int Row, int Column)
-        {
-            int[,] array2D = new int[Row, Column];
-            array2D = array_2D;
-            int temp;
-            Console.WriteLine("Result:");
-            for (int i = 0; i < Row; i++)
-            {
-                for (int j = i; j < Column; j++)
-                {
-                    //for (int k = j + 1; )
-                }
-                    if (array2D[i] > array2D[j])
-                    {
-                        temp = array1[j];
-                        array1[j] = array1[i];
-                        array1[i] = temp;
-                    }
-                Console.WriteLine(array1[i]);
-            }
-        } */
 
         static void Choise(string method, int[] array, int volume)
         {
             switch (method)
             {
+                
                 case "1":
-                    FromTopToBottom(array, volume);
+                    Sorting.FromTopToBottom(array, volume);
                     break;
                 case "2":
-                    FromBottomToTop(array, volume);
+                    Sorting.FromBottomToTop(array, volume);
+                    break;
+                case "3":
+                    Sorting.FindMax(array);
+                    break;
+                case "4":
+                    Sorting.FindMin(array);
                     break;
                 case "exit":
                     break;
                 default:
-                    Console.WriteLine("You choose the unexisting method.");
+                    Console.WriteLine("You chose the unexisting method.");
                     break;
             }
         }
+        
+        static void Choise(string method, int[,] array_2D, int row, int column)
+        {
+            switch (method)
+            {
+                case "1":
+                    Sorting.FromTopToBottomRow(array_2D, row, column);
+                    break;
+                case "2":
+                    Sorting.FromBottomToTopRow(array_2D, row, column);
+                    break;
+                case "3":
+                    Sorting.FromTopToBottomColumn(array_2D, row, column);
+                    break;
+                case "4":
+                    Sorting.FromBottomToTopColumn(array_2D, row, column);
+                    break;
+                case "5":
+                    Sorting.FindMax(array_2D, row, column);
+                    break;
+                case "6":
+                    Sorting.FindMin(array_2D, row, column);
+                    break;
+                case "exit":
+                    break;
+                case "e":
+                    break;
+                default:
+                    Console.WriteLine("You chose the unexisting method.");
+                    break;
+            }
+        }
+
+       //static void save(in int array_1D, in int array_2D, out int array_1D_duplicate, out int array_2D_duplicate)
+        
 
         static void Main(string[] args)
         {
@@ -100,30 +83,51 @@ namespace ConsoleApp5
                         bool TryVolume = int.TryParse(StringVolume, out int volume);
                         if (TryVolume == true)
                         {
-                            Console.WriteLine("Enter array elements. \nIf you decided to enter less element then type 'break':");
-                            int[] array_oneD = new int[volume];
-                            for (int i = 0; i < volume; i++)
+                            int[] array_1D = new int[volume];
+                            Console.WriteLine("Choose kind of array:\n1) Random;\n2) My own.");
+                            string Kind = Console.ReadLine();
+                            switch (Kind)
                             {
-                                string StringArray = Console.ReadLine();
-                                bool TryArray = int.TryParse(StringArray, out array_oneD[i]);
-                                if (StringArray == "break")
+                                case "1":
+                                    Console.Write("Enter the range of randomizer:\nfrom ");
+                                    int from = Convert.ToInt32(Console.ReadLine());
+                                    Console.Write("to ");
+                                    int to = Convert.ToInt32(Console.ReadLine());
+                                    Random Random1D = new Random();
+                                    for (int i = 0; i < volume; i++)
+                                    {
+                                        array_1D[i] = Random1D.Next(from, to);
+                                        Console.Write(array_1D[i] + "\t");
+                                    }
+                                    Console.WriteLine();
                                     break;
-                                if (TryArray == false)
-                                {
-                                    Console.WriteLine("Entered value is not an number.");
-                                    i--;
-                                    continue;
-                                }
+                                case "2":
+                                    Console.WriteLine("Enter array elements. \nIf you decided to enter less element then type 'break':");
+                                    for (int i = 0; i < volume; i++)
+                                    {
+                                        string StringArray = Console.ReadLine();
+                                        bool TryArray = int.TryParse(StringArray, out array_1D[i]);
+                                        if (StringArray == "break")
+                                            break;
+                                        if (TryArray == false)
+                                        {
+                                            Console.WriteLine("Entered value is not an number.");
+                                            i--;
+                                            continue;
+                                        }
+                                    }
+                                    break;
                             }
-                            Console.WriteLine("Choose the sorting method: \n1) From biggest to smallest.\n2) From smallest to biggest.");
-                            string method = Console.ReadLine();
-                            Choise(method, array_oneD, volume);
+                            Console.WriteLine("What you want to do with array?\nSorting:\n1) From biggest to smallest;\n2) From smallest to biggest.\n" +
+                                "Find element:\n3) Maximum value in array;\n4) Minimum value in array; ");
+                            string method1D = Console.ReadLine();
+                            Choise(method1D, array_1D, volume);
                         }
                         else
                         {
                             Console.WriteLine("Enter correct number.\n");
                         }
-                        break;
+                        continue;
                     case "2":
                         Console.WriteLine("Enter rows count:");
                         string StringRow = Console.ReadLine();
@@ -132,21 +136,25 @@ namespace ConsoleApp5
                         string StringColumn = Console.ReadLine();
                         bool TryColumn = int.TryParse(StringRow, out int Column);
                         int[,] array_2D = new int[Row, Column];
-                        Random rnd = new Random();
+                        Random Random2D = new Random();
+                        Console.WriteLine("Array:");
                         if (TryRow == true && TryColumn == true)
                         {
                             for (int i = 0; i < Row; i++)
                             {
                                 for (int j = 0; j < Column; j++)
                                 {
-                                    array_2D[i, j] = rnd.Next(-100,100);
+                                    array_2D[i, j] = Random2D.Next(-100,100);
                                     Console.Write(array_2D[i,j]+"\t");
                                 }
                                 Console.WriteLine();
                             }
-                            //FromBottomToTop(array_2D, Row, Column);
                         }
-                        break;
+                        Console.WriteLine("What you want to do with array?\n Sorting: \n1) From biggest to smallest in row.\n2) From smallest to biggest in row." +
+                        "\n3) From biggest to smallest in column\n4) From smallest to biggest in column \nFind element: \n5) Maximum value in array; \n6) Minimum value in array.");
+                        string method2D = Console.ReadLine();
+                        Choise(method2D, array_2D, Row, Column);
+                        continue;
                 }
                    
             }
